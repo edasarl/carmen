@@ -14,11 +14,8 @@ if (!process.argv[2]) {
 var Carmen = require('../index');
 var path = require('path');
 var argv = require('minimist')(process.argv, {
-    string: 'query',
-    string: 'index',
-    boolean: 'phrase',
-    boolean: 'term',
-    boolean: 'geojson'
+    'string': [ 'query', 'index' ],
+    'boolean':[ 'phrase', 'term', 'geojson' ]
 });
 
 if (!argv.query) throw new Error('--query argument required');
@@ -26,24 +23,18 @@ if (!argv.index) throw new Error('--index arguement required');
 if (!argv.term && !argv.phrase) throw new Error('--[phrase|term] argument required');
 
 var opts = {};
-if (argv.config) {
-    opts = require(path.resolve(argv.config));
-} else if (argv._.length > 2) { //Given Tile Source
-    var src = path.resolve(argv._[argv._.length-1]);
-    var stat = fs.statSync(src);
-    if (stat.isDirectory()) {
-        opts = Carmen.autodir(src);
-    } else {
-        opts[path.basename(src)] = Carmen.auto(src);
-    }
+if (argv.index) { //Given Tile Source
+    if (!fs.existsSync(argv.index)) throw new Error('Index does not point to actual file');
+    var src = path.resolve(argv.index);
+    opts[path.basename(src)] = Carmen.auto(src);
 } else { //Default Tile Source
-    opts = Carmen.autodir(path.resolve(__dirname + '/../tiles'));
+    throw new Error('--index="<index-path>" required');
 }
 
 var geocoder = new Carmen(opts);
 
 geocoder.on('open', function() {
-    var source = geocoder.indexes[argv.index] ? geocoder.indexes[argv.index] : '';
+    var source = geocoder.indexes[Object.keys(geocoder.indexes)[0]];
     if (argv.term) {
         var terms = termops.tokenize(argv.query),
             termsHash = [];

@@ -3,6 +3,7 @@ var path = require('path');
 var tape = require('tape');
 var exec = require('child_process').exec;
 var bin = path.resolve(path.join(__dirname, '..', 'scripts'));
+var fixture = path.resolve(path.join(__dirname, '..', 'tiles'));
 
 tape('bin/carmen', function(t) {
     exec(bin + '/carmen.js', function(err, stdout, stderr) {
@@ -19,7 +20,7 @@ tape('bin/carmen query', function(t) {
     });
 });
 tape('bin/lookup query', function(t) {
-    exec(bin + '/lookup.js --query="czech republic", --index="country" --term', function(err, stdout, stderr) {
+    exec(bin + '/lookup.js --query="czech republic", --index="tiles/01-ne.country.mbtiles" --term', function(err, stdout, stderr) {
         t.ifError(err);
         var lookup = stdout.replace(/\r?\n|\r/g, " ");
         var lookupFixture = fs.readFileSync(__dirname + '/fixtures/lookup', 'utf-8').replace(/\r?\n|\r/g, " ");

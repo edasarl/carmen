@@ -56,8 +56,8 @@ test('reverse address point clustering', function(t) {
             }, [1,3]),
         {
             _cluster: { 10: { coordinates: [ 2, 4 ], type: 'Point' }, 7: { coordinates: [ 0, 1 ], type: 'Point' }, 9: { coordinates: [ 1, 3 ], type: 'Point' } },
-            _geometry: { coordinates: [ 2, 4 ], type: 'Point' },
-            _text: '10 test' });
+            _geometry: { coordinates: [ 1, 3 ], type: 'Point' },
+            _text: '9 test' });
     t.end();
 });
 
